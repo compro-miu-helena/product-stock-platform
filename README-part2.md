@@ -1,62 +1,110 @@
 # Product Stock Microservices Platform (Lab 8 Part 2)
 
 ## Goal
-Add a circuit breaker around the remote call from `product-service` to `stock-service` so `product-service` can return a fallback value when the stock endpoint is unavailable.
+
+Implement Mongo-backed command and query services for products and stock, and keep the product read
+model in sync when either product data or stock data changes.
 
 ## Changes made
 
-`product-service` now includes:
+`product-service` now contains:
 
-- `org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j`
+- `ProductCommandService` for add, update, and delete product operations
+- `ProductQueryService` for read operations
+- `ProductCommand` documents stored in the `product-command-service` collection
+- `ProductView` documents stored in the `product-query-service` collection
 
-The Feign call is no longer made directly from the controller. It now flows through:
+`stock-service` now contains:
 
-- `ProductController`
-- `ProductCatalogService`
-- `StockLookupService`
+- `StockCommandService` for add, update, delete, and read stock operations
+- `Stock` documents stored in the `stock-command-service` collection
 
-`StockLookupService` wraps the remote call through Spring Cloud CircuitBreaker:
+The public controllers are:
 
-```java
-circuitBreakerFactory.create("stockService")
-        .run(() -> stockClient.getStock(productNumber), throwable -> -1);
-```
+- `POST /products`
+- `PUT /products/{productNumber}`
+- `DELETE /products/{productNumber}`
+- `GET /products`
+- `GET /products/{productNumber}`
+- `POST /stock`
+- `PUT /stock/{productNumber}`
+- `DELETE /stock/{productNumber}`
+- `GET /stock/{productNumber}`
 
-If `stock-service` is unavailable, the fallback returns `-1` for `numberOnStock`.
+## Synchronization strategy
 
-## Circuit breaker configuration
+The query side returned by `ProductQueryService` contains:
 
-The breaker is configured in `product-service/src/main/resources/application.properties` to open quickly for demo/testing:
+- `productNumber`
+- `name`
+- `price`
+- `numberInStock`
 
-```properties
-resilience4j.circuitbreaker.instances.stockService.sliding-window-size=2
-resilience4j.circuitbreaker.instances.stockService.minimum-number-of-calls=2
-resilience4j.circuitbreaker.instances.stockService.failure-rate-threshold=50
-resilience4j.circuitbreaker.instances.stockService.wait-duration-in-open-state=30s
-```
+That is maintained in two ways:
 
-## Test added
+1. `ProductCommandService` updates the product query collection whenever product data is added or changed.
+2. `StockCommandService` calls `PUT /internal/products/{productNumber}/stock` on `product-service`
+   whenever stock changes.
 
-Automated verification was added in:
+This keeps product reads current even though product writes and stock writes live in different
+services and different Mongo collections.
 
-- `product-service/src/test/java/lab/productservice/service/ProductCatalogServiceCircuitBreakerTest.java`
+## Mongo collections
 
-The test forces the Feign client to fail, verifies that:
+- `product-command-service`
+- `product-query-service`
+- `stock-command-service`
 
-- the fallback response returns `numberOnStock = -1`
-- after two failures the breaker opens
-- the third call is short-circuited and does not call the Feign client again
+## Main files
+
+- `product-service/src/main/java/lab/productservice/service/ProductCommandService.java`
+- `product-service/src/main/java/lab/productservice/service/ProductQueryService.java`
+- `product-service/src/main/java/lab/productservice/controller/ProductCommandController.java`
+- `product-service/src/main/java/lab/productservice/controller/ProductQueryController.java`
+- `product-service/src/main/java/lab/productservice/controller/ProductProjectionSyncController.java`
+- `stock-service/src/main/java/lab/stockservice/service/StockCommandService.java`
+- `stock-service/src/main/java/lab/stockservice/StockController.java`
 
 ## Manual verification
 
-1. Start `product-service`
-2. Leave `stock-service` stopped, or stop it after startup
-3. Call `http://localhost:8901/product/1`
+1. Start MongoDB on port `27017`
+2. Start `config-server`
+3. Start `product-service`
+4. Start `stock-service`
+5. Call `POST http://localhost:8901/products`
 
-Expected fallback response:
+Request body:
 
 ```json
-{"productNumber":1,"name":"Laptop","numberOnStock":-1}
+{"productNumber":1001,"name":"Monitor","price":249.99}
 ```
 
-After repeated failed requests, the circuit opens and `product-service` stops attempting the remote stock call until the open-state wait period expires.
+6. Call `PUT http://localhost:8900/stock/1001`
+
+Request body:
+
+```json
+{"productNumber":1001,"quantity":12}
+```
+
+7. Call `GET http://localhost:8901/products/1001`
+
+Expected response:
+
+```json
+{"productNumber":1001,"name":"Monitor","price":249.99,"numberInStock":12}
+```
+
+8. Update the product with `PUT http://localhost:8901/products/1001`
+
+```json
+{"productNumber":1001,"name":"4K Monitor","price":299.99}
+```
+
+9. Call `GET http://localhost:8901/products/1001` again
+
+Expected response:
+
+```json
+{"productNumber":1001,"name":"4K Monitor","price":299.99,"numberInStock":12}
+```
