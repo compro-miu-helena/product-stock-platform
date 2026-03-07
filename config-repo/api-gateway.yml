@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+        health-check-url: http://host.docker.internal:${server.port}/actuator/health
+        health-check-interval: 10s
+        health-check-timeout: 5s
+        health-check-critical-timeout: 30s
+        query-passing: true
+    gateway:
+      routes:
+        - id: product-service-route
+          uri: lb://product-service
+          predicates:
+            - Path=/product/**
+        - id: stock-service-route
+          uri: lb://stock-service
+          predicates:
+            - Path=/stock/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
