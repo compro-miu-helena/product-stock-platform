@@ -1,12 +1,10 @@
 package lab.productservice.repository;
 
-import java.util.Optional;
+import java.util.List;
 
-import lab.productservice.model.ProductCommand;
+import lab.productservice.model.ProductEvent;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ProductCommandRepository extends MongoRepository<ProductCommand, String> {
-    Optional<ProductCommand> findByProductNumber(int productNumber);
-
-    boolean existsByProductNumber(int productNumber);
+public interface ProductCommandRepository extends MongoRepository<ProductEvent, String> {
+    List<ProductEvent> findByProductNumberOrderBySequenceNumberAsc(int productNumber);
 }

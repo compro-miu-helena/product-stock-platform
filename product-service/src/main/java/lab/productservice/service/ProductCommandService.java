@@ -4,12 +4,16 @@ import feign.FeignException;
 import lab.productservice.client.StockClient;
 import lab.productservice.dto.ProductRequest;
 import lab.productservice.model.ProductCommand;
+import lab.productservice.model.ProductEvent;
+import lab.productservice.model.ProductEventType;
 import lab.productservice.model.ProductView;
 import lab.productservice.repository.ProductCommandRepository;
 import lab.productservice.repository.ProductQueryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class ProductCommandService {
@@ -27,13 +31,20 @@ public class ProductCommandService {
     }
 
     public ProductCommand addProduct(ProductRequest request) {
-        if (productCommandRepository.existsByProductNumber(request.productNumber())) {
+        if (currentProduct(request.productNumber()) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Product already exists for productNumber " + request.productNumber());
         }
 
-        ProductCommand savedProduct = productCommandRepository.save(
-                new ProductCommand(null, request.productNumber(), request.name(), request.price()));
+        ProductEvent savedEvent = productCommandRepository.save(new ProductEvent(
+                null,
+                request.productNumber(),
+                nextSequenceNumber(request.productNumber()),
+                ProductEventType.CREATED,
+                request.name(),
+                request.price()));
+
+        ProductCommand savedProduct = toCommand(savedEvent);
 
         productQueryRepository.save(new ProductView(
                 null,
@@ -46,15 +57,17 @@ public class ProductCommandService {
     }
 
     public ProductCommand updateProduct(int productNumber, ProductRequest request) {
-        ProductCommand existingProduct = productCommandRepository.findByProductNumber(productNumber)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Product not found for productNumber " + productNumber));
+        requireCurrentProduct(productNumber);
 
-        ProductCommand savedProduct = productCommandRepository.save(new ProductCommand(
-                existingProduct.id(),
+        ProductEvent savedEvent = productCommandRepository.save(new ProductEvent(
+                null,
                 productNumber,
+                nextSequenceNumber(productNumber),
+                ProductEventType.UPDATED,
                 request.name(),
                 request.price()));
+
+        ProductCommand savedProduct = toCommand(savedEvent);
 
         productQueryRepository.findByProductNumber(productNumber)
                 .ifPresentOrElse(existingView -> productQueryRepository.save(new ProductView(
@@ -74,12 +87,53 @@ public class ProductCommandService {
     }
 
     public void deleteProduct(int productNumber) {
-        ProductCommand existingProduct = productCommandRepository.findByProductNumber(productNumber)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Product not found for productNumber " + productNumber));
-
-        productCommandRepository.delete(existingProduct);
+        requireCurrentProduct(productNumber);
+        productCommandRepository.save(new ProductEvent(
+                null,
+                productNumber,
+                nextSequenceNumber(productNumber),
+                ProductEventType.DELETED,
+                null,
+                0.0));
         productQueryRepository.deleteByProductNumber(productNumber);
+    }
+
+    private ProductCommand requireCurrentProduct(int productNumber) {
+        ProductCommand product = currentProduct(productNumber);
+        if (product == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Product not found for productNumber " + productNumber);
+        }
+        return product;
+    }
+
+    private ProductCommand currentProduct(int productNumber) {
+        List<ProductEvent> events = productCommandRepository.findByProductNumberOrderBySequenceNumberAsc(productNumber);
+        if (events.isEmpty()) {
+            return null;
+        }
+
+        ProductCommand current = null;
+        for (ProductEvent event : events) {
+            if (event.eventType() == ProductEventType.DELETED) {
+                current = null;
+            } else {
+                current = toCommand(event);
+            }
+        }
+        return current;
+    }
+
+    private long nextSequenceNumber(int productNumber) {
+        List<ProductEvent> events = productCommandRepository.findByProductNumberOrderBySequenceNumberAsc(productNumber);
+        if (events.isEmpty()) {
+            return 1L;
+        }
+        return events.get(events.size() - 1).sequenceNumber() + 1;
+    }
+
+    private ProductCommand toCommand(ProductEvent event) {
+        return new ProductCommand(event.productNumber(), event.name(), event.price());
     }
 
     private int currentQuantity(int productNumber) {

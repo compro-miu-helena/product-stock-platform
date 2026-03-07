@@ -2,24 +2,31 @@
 
 ## Goal
 
-Implement Mongo-backed command and query services for products and stock, and keep the product read
-model in sync when either product data or stock data changes.
+Change `ProductCommandService` to use event sourcing while keeping the same external behavior as Part 1.
 
-## Changes made
+## What changed
 
-`product-service` now contains:
+`stock-service` still behaves the same as before:
 
-- `ProductCommandService` for add, update, and delete product operations
-- `ProductQueryService` for read operations
-- `ProductCommand` documents stored in the `product-command-service` collection
-- `ProductView` documents stored in the `product-query-service` collection
+- `StockCommandService` stores stock documents in `stock-command-service`
+- stock updates still synchronize `numberInStock` into the product read model
 
-`stock-service` now contains:
+`product-service` now uses an event-sourced write model:
 
-- `StockCommandService` for add, update, delete, and read stock operations
-- `Stock` documents stored in the `stock-command-service` collection
+- `ProductCommandService` appends `ProductEvent` documents instead of overwriting a single product document
+- events are stored in the `product-command-service` Mongo collection
+- the current product state is rebuilt by replaying the event stream for a `productNumber`
+- `ProductQueryService` still reads from `product-query-service`
 
-The public controllers are:
+The event types are:
+
+- `CREATED`
+- `UPDATED`
+- `DELETED`
+
+## Behavior that stayed the same
+
+The public API did not change:
 
 - `POST /products`
 - `PUT /products/{productNumber}`
@@ -31,39 +38,43 @@ The public controllers are:
 - `DELETE /stock/{productNumber}`
 - `GET /stock/{productNumber}`
 
-## Synchronization strategy
-
-The query side returned by `ProductQueryService` contains:
+The query result also stays the same:
 
 - `productNumber`
 - `name`
 - `price`
 - `numberInStock`
 
-That is maintained in two ways:
+When product data changes, the query projection is updated.
+When stock data changes, the stock service still pushes the new quantity into the product projection.
 
-1. `ProductCommandService` updates the product query collection whenever product data is added or changed.
-2. `StockCommandService` calls `PUT /internal/products/{productNumber}/stock` on `product-service`
-   whenever stock changes.
+## Event sourcing flow
 
-This keeps product reads current even though product writes and stock writes live in different
-services and different Mongo collections.
+For product writes, `ProductCommandService` now:
+
+1. Loads all events for the `productNumber`
+2. Rebuilds the current product state from those events
+3. Validates whether the command is allowed
+4. Appends a new event with the next sequence number
+5. Updates the query projection so reads continue to work exactly as before
+
+Deletes no longer remove command records from Mongo. Instead, a `DELETED` event is appended and the
+read projection is removed.
 
 ## Mongo collections
 
-- `product-command-service`
-- `product-query-service`
-- `stock-command-service`
+- `product-command-service` stores product events
+- `product-query-service` stores the current product read model
+- `stock-command-service` stores stock documents
 
 ## Main files
 
 - `product-service/src/main/java/lab/productservice/service/ProductCommandService.java`
+- `product-service/src/main/java/lab/productservice/model/ProductEvent.java`
+- `product-service/src/main/java/lab/productservice/model/ProductEventType.java`
+- `product-service/src/main/java/lab/productservice/repository/ProductCommandRepository.java`
 - `product-service/src/main/java/lab/productservice/service/ProductQueryService.java`
-- `product-service/src/main/java/lab/productservice/controller/ProductCommandController.java`
-- `product-service/src/main/java/lab/productservice/controller/ProductQueryController.java`
-- `product-service/src/main/java/lab/productservice/controller/ProductProjectionSyncController.java`
 - `stock-service/src/main/java/lab/stockservice/service/StockCommandService.java`
-- `stock-service/src/main/java/lab/stockservice/StockController.java`
 
 ## Manual verification
 
@@ -95,16 +106,24 @@ Expected response:
 {"productNumber":1001,"name":"Monitor","price":249.99,"numberInStock":12}
 ```
 
-8. Update the product with `PUT http://localhost:8901/products/1001`
+8. Call `PUT http://localhost:8901/products/1001`
 
 ```json
 {"productNumber":1001,"name":"4K Monitor","price":299.99}
 ```
 
-9. Call `GET http://localhost:8901/products/1001` again
+9. Call `GET http://localhost:8901/products/1001`
 
 Expected response:
 
 ```json
 {"productNumber":1001,"name":"4K Monitor","price":299.99,"numberInStock":12}
 ```
+
+10. Call `DELETE http://localhost:8901/products/1001`
+
+11. Confirm that:
+
+- `GET http://localhost:8901/products/1001` returns `404`
+- the `product-command-service` collection still contains the event history for `1001`
+- the last product event for `1001` is `DELETED`
