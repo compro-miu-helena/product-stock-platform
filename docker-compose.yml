@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  mongo:
+    image: mongo:8.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - consul-net
+
   consul-server-1:
     image: hashicorp/consul:latest
     container_name: consul-server-1

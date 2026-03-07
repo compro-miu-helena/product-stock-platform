@@ -1,2 +1,8 @@
-C:\Users\mbeua\Área de Trabalho\CS590\product-stock-microservices-platform\stock-service\src\main\java\lab\stockservice\StockController.java
-C:\Users\mbeua\Área de Trabalho\CS590\product-stock-microservices-platform\stock-service\src\main\java\lab\stockservice\StockServiceApplication.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\client\ProductQuerySyncClient.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\dto\StockRequest.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\dto\StockUpdateRequest.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\model\Stock.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\repository\StockRepository.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\service\StockCommandService.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\StockController.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\stock-service\src\main\java\lab\stockservice\StockServiceApplication.java
