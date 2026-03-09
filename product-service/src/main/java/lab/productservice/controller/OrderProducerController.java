@@ -1,0 +1,25 @@
+package lab.productservice.controller;
+
+import lab.productservice.service.OrderProducer;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/orders")
+public class OrderProducerController {
+
+    private final OrderProducer orderProducer;
+
+    public OrderProducerController(OrderProducer orderProducer) {
+        this.orderProducer = orderProducer;
+    }
+
+    @PostMapping("/publish-sample")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void publishSampleOrders() {
+        orderProducer.publishSampleOrders();
+    }
+}

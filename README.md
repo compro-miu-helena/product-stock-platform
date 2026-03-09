@@ -57,3 +57,27 @@ This repository currently includes the work captured in:
 - `README-part2.md` for the Mongo-backed command/query implementation
 - `README-part3.md` for Spring Cloud Contract producer and consumer modules
 - `README-part4.md` for Spring Cloud Config Server with Git-backed configuration
+
+## Kafka orders example
+
+`product-service` now includes a Kafka-based `Order` example with:
+
+- a producer that publishes 5 sample `Order` messages
+- one consumer that reads published orders
+- one consumer that always starts from the beginning by using a fresh group id
+- two consumers in the same group to show that, with a single topic partition, one consumer gets all messages while the other stays idle
+
+Run Kafka with:
+
+```bash
+docker compose up -d kafka
+```
+
+Then run `product-service`. It will publish the 5 sample orders on startup.
+To publish the same 5 orders again without restarting the service:
+
+```bash
+curl -X POST http://localhost:8901/orders/publish-sample
+```
+
+If you start `product-service` without `config-server`, use port `8080` instead.
