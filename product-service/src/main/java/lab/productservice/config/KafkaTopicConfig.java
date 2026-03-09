@@ -12,7 +12,7 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic ordersTopic(@Value("${app.kafka.orders-topic}") String topicName) {
         return TopicBuilder.name(topicName)
-                .partitions(1)
+                .partitions(3)
                 .replicas(1)
                 .build();
     }

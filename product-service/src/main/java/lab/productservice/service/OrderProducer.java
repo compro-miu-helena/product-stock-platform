@@ -20,6 +20,15 @@ public class OrderProducer {
     }
 
     public void publishSampleOrders() {
+        publishSampleOrdersWithSameKey();
+    }
+
+    public void publishSampleOrdersWithSameKey() {
+        String sharedKey = "all-orders";
+        sampleOrders().forEach(order -> kafkaTemplate.send(topicName, sharedKey, order));
+    }
+
+    public void publishSampleOrdersWithUniqueKeys() {
         sampleOrders().forEach(order -> kafkaTemplate.send(topicName, order.orderNumber(), order));
     }
 

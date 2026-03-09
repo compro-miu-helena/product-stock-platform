@@ -22,4 +22,16 @@ public class OrderProducerController {
     public void publishSampleOrders() {
         orderProducer.publishSampleOrders();
     }
+
+    @PostMapping("/publish-same-key")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void publishSampleOrdersWithSameKey() {
+        orderProducer.publishSampleOrdersWithSameKey();
+    }
+
+    @PostMapping("/publish-unique-keys")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void publishSampleOrdersWithUniqueKeys() {
+        orderProducer.publishSampleOrdersWithUniqueKeys();
+    }
 }

@@ -63,9 +63,10 @@ This repository currently includes the work captured in:
 `product-service` now includes a Kafka-based `Order` example with:
 
 - a producer that publishes 5 sample `Order` messages
-- one consumer that reads published orders
-- one consumer that always starts from the beginning by using a fresh group id
-- two consumers in the same group to show that, with a single topic partition, one consumer gets all messages while the other stays idle
+- a topic configured with 3 partitions
+- 3 listeners, each pinned to one partition
+- log output that prints the offset and partition for each consumed message
+- two producer modes: same key for every order, or a unique key per order using `orderNumber`
 
 Run Kafka with:
 
@@ -73,11 +74,18 @@ Run Kafka with:
 docker compose up -d kafka
 ```
 
-Then run `product-service`. It will publish the 5 sample orders on startup.
-To publish the same 5 orders again without restarting the service:
+Then run `product-service`. It will publish the 5 sample orders on startup using the same key for every order, so all messages should land on the same partition.
+
+To publish the same 5 orders again with the same key:
 
 ```bash
-curl -X POST http://localhost:8901/orders/publish-sample
+curl -X POST http://localhost:8901/orders/publish-same-key
+```
+
+To publish the 5 orders with unique keys (`orderNumber`) and observe distribution across partitions:
+
+```bash
+curl -X POST http://localhost:8901/orders/publish-unique-keys
 ```
 
 If you start `product-service` without `config-server`, use port `8080` instead.
