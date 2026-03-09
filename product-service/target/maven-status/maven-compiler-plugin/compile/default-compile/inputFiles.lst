@@ -8,8 +8,10 @@ C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderErrorHandlerConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderRetryableConsumers.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderTransactionalConsumer.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\OrderBatchDemoController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\OrderProducerController.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\OrderTransactionalController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductCommandController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductProjectionSyncController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductQueryController.java
@@ -26,5 +28,6 @@ C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\repository\ProductQueryRepository.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\OrderBatchDemoService.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\OrderProducer.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\OrderTransactionalProducer.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\ProductCommandService.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\ProductQueryService.java

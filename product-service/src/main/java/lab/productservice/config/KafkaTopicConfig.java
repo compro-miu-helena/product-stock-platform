@@ -61,4 +61,13 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic ordersTransactionalTopic(
+            @Value("${app.kafka.orders-transactional-topic}") String topicName) {
+        return TopicBuilder.name(topicName)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 }

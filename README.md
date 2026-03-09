@@ -128,4 +128,20 @@ curl -X POST http://localhost:8901/orders/batch-demo/consumer-side/start
 curl -X POST http://localhost:8901/orders/batch-demo/consumer-side/stop
 ```
 
+## Kafka transaction example
+
+`product-service` also includes a transactional `Order` producer and a `read_committed` consumer.
+
+To commit a transaction that publishes 5 orders:
+
+```bash
+curl -X POST http://localhost:8901/orders/transactions/commit
+```
+
+To trigger a rollback after an exception and verify that no messages are consumed:
+
+```bash
+curl -X POST http://localhost:8901/orders/transactions/rollback
+```
+
 If you start `product-service` without `config-server`, use port `8080` instead.
