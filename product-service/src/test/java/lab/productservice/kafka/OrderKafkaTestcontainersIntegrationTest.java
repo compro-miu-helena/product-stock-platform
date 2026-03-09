@@ -1,11 +1,11 @@
 package lab.productservice.kafka;
 
 import lab.productservice.client.StockClient;
-import lab.productservice.consumer.OrderConsumers;
+import lab.productservice.consumer.OrderPartitionConsumers;
 import lab.productservice.model.Order;
 import lab.productservice.repository.ProductCommandRepository;
 import lab.productservice.repository.ProductQueryRepository;
-import lab.productservice.service.OrderProducer;
+import lab.productservice.service.OrderPublishingService;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -77,7 +77,7 @@ class OrderKafkaTestcontainersIntegrationTest {
     }
 
     @Autowired
-    private OrderProducer orderProducer;
+    private OrderPublishingService orderPublishingService;
 
     @Autowired
     @Qualifier("kafkaTemplate")
@@ -87,7 +87,7 @@ class OrderKafkaTestcontainersIntegrationTest {
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @SpyBean
-    private OrderConsumers orderConsumers;
+    private OrderPartitionConsumers orderPartitionConsumers;
 
     @MockBean
     private ProductCommandRepository productCommandRepository;
@@ -110,7 +110,7 @@ class OrderKafkaTestcontainersIntegrationTest {
         try (Consumer<String, Order> consumer = createConsumer("tc-producer-test-group")) {
             consumer.subscribe(List.of("tc-orders-topic"));
 
-            orderProducer.publishSampleOrdersWithUniqueKeys();
+            orderPublishingService.publishSampleOrdersWithUniqueKeys();
 
             List<ConsumerRecord<String, Order>> records = pollUntilCount(consumer, 6).stream()
                     .filter(record -> record.value().orderNumber().startsWith("ORD-"))
@@ -131,7 +131,7 @@ class OrderKafkaTestcontainersIntegrationTest {
 
         kafkaTemplate.send("tc-orders-topic", 0, order.orderNumber(), order).get();
 
-        verify(orderConsumers, timeout(10000)).consumePartitionZero(
+        verify(orderPartitionConsumers, timeout(10000)).consumePartitionZero(
                 argThat(received -> received.orderNumber().equals("TC-ORDER-0001")),
                 anyLong(),
                 eq(0));

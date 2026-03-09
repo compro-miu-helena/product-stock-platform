@@ -10,9 +10,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderConsumers {
+public class OrderPartitionConsumers {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderConsumers.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderPartitionConsumers.class);
 
     @KafkaListener(
             id = "order-partition-0-consumer",

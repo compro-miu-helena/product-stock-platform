@@ -1,13 +1,12 @@
 package lab.productservice.service;
 
+import lab.productservice.config.OrderKafkaProperties;
 import lab.productservice.model.Order;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,8 +15,8 @@ public class OrderBatchDemoService {
 
     private final KafkaTemplate<Object, Object> defaultKafkaTemplate;
     private final KafkaTemplate<String, Order> orderProducerBatchKafkaTemplate;
-    private final String producerBatchTopicName;
-    private final String consumerBatchTopicName;
+    private final OrderKafkaProperties properties;
+    private final OrderFixtureFactory orderFixtureFactory;
     private final AtomicInteger producerBatchSequence = new AtomicInteger(1);
     private final AtomicInteger consumerBatchSequence = new AtomicInteger(1);
     private final AtomicLong producerBatchEnabled = new AtomicLong(0);
@@ -26,12 +25,12 @@ public class OrderBatchDemoService {
     public OrderBatchDemoService(@Qualifier("kafkaTemplate") KafkaTemplate<Object, Object> defaultKafkaTemplate,
                                  @Qualifier("orderProducerBatchKafkaTemplate")
                                  KafkaTemplate<String, Order> orderProducerBatchKafkaTemplate,
-                                 @Value("${app.kafka.orders-producer-batch-topic}") String producerBatchTopicName,
-                                 @Value("${app.kafka.orders-consumer-batch-topic}") String consumerBatchTopicName) {
+                                 OrderKafkaProperties properties,
+                                 OrderFixtureFactory orderFixtureFactory) {
         this.defaultKafkaTemplate = defaultKafkaTemplate;
         this.orderProducerBatchKafkaTemplate = orderProducerBatchKafkaTemplate;
-        this.producerBatchTopicName = producerBatchTopicName;
-        this.consumerBatchTopicName = consumerBatchTopicName;
+        this.properties = properties;
+        this.orderFixtureFactory = orderFixtureFactory;
     }
 
     public void startProducerSideBatchDemo() {
@@ -55,8 +54,8 @@ public class OrderBatchDemoService {
         if (producerBatchEnabled.get() == 0) {
             return;
         }
-        Order order = newTimedOrder("PRODUCER-BATCH", producerBatchSequence.getAndIncrement());
-        orderProducerBatchKafkaTemplate.send(producerBatchTopicName, order.orderNumber(), order);
+        Order order = orderFixtureFactory.timedOrder("PRODUCER-BATCH", producerBatchSequence.getAndIncrement());
+        orderProducerBatchKafkaTemplate.send(properties.getOrdersProducerBatchTopic(), order.orderNumber(), order);
     }
 
     @Scheduled(fixedRate = 2000L)
@@ -64,16 +63,7 @@ public class OrderBatchDemoService {
         if (consumerBatchEnabled.get() == 0) {
             return;
         }
-        Order order = newTimedOrder("CONSUMER-BATCH", consumerBatchSequence.getAndIncrement());
-        defaultKafkaTemplate.send(consumerBatchTopicName, order.orderNumber(), order);
-    }
-
-    private Order newTimedOrder(String prefix, int sequence) {
-        return new Order(
-                prefix + "-" + String.format("%04d", sequence),
-                prefix + "-Customer-" + sequence,
-                "USA",
-                100.0 + sequence,
-                Instant.now().toString());
+        Order order = orderFixtureFactory.timedOrder("CONSUMER-BATCH", consumerBatchSequence.getAndIncrement());
+        defaultKafkaTemplate.send(properties.getOrdersConsumerBatchTopic(), order.orderNumber(), order);
     }
 }

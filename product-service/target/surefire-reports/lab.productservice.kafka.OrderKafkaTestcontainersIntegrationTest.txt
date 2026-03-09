@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 60.44 s -- in lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 92.89 s -- in lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest
