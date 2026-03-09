@@ -88,4 +88,23 @@ To publish the 5 orders with unique keys (`orderNumber`) and observe distributio
 curl -X POST http://localhost:8901/orders/publish-unique-keys
 ```
 
+## Kafka retry and DLT examples
+
+`product-service` also includes two error-handling examples for `Order` consumers:
+
+- `DefaultErrorHandler`: retries 2 times, then sends the failed message to a DLT
+- `@RetryableTopic`: retries 2 times, then sends the failed message to a DLT
+
+To trigger the `DefaultErrorHandler` flow:
+
+```bash
+curl -X POST http://localhost:8901/orders/publish-default-error-handler-failure
+```
+
+To trigger the `@RetryableTopic` flow:
+
+```bash
+curl -X POST http://localhost:8901/orders/publish-retryable-failure
+```
+
 If you start `product-service` without `config-server`, use port `8080` instead.

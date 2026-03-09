@@ -12,11 +12,17 @@ public class OrderProducer {
 
     private final KafkaTemplate<String, Order> kafkaTemplate;
     private final String topicName;
+    private final String errorHandlerTopicName;
+    private final String retryableTopicName;
 
     public OrderProducer(KafkaTemplate<String, Order> kafkaTemplate,
-                         @Value("${app.kafka.orders-topic}") String topicName) {
+                         @Value("${app.kafka.orders-topic}") String topicName,
+                         @Value("${app.kafka.orders-error-handler-topic}") String errorHandlerTopicName,
+                         @Value("${app.kafka.orders-retryable-topic}") String retryableTopicName) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicName = topicName;
+        this.errorHandlerTopicName = errorHandlerTopicName;
+        this.retryableTopicName = retryableTopicName;
     }
 
     public void publishSampleOrders() {
@@ -30,6 +36,14 @@ public class OrderProducer {
 
     public void publishSampleOrdersWithUniqueKeys() {
         sampleOrders().forEach(order -> kafkaTemplate.send(topicName, order.orderNumber(), order));
+    }
+
+    public void publishDefaultErrorHandlerOrder(Order order) {
+        kafkaTemplate.send(errorHandlerTopicName, order.orderNumber(), order);
+    }
+
+    public void publishRetryableOrder(Order order) {
+        kafkaTemplate.send(retryableTopicName, order.orderNumber(), order);
     }
 
     private List<Order> sampleOrders() {

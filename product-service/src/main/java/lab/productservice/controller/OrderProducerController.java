@@ -1,5 +1,6 @@
 package lab.productservice.controller;
 
+import lab.productservice.model.Order;
 import lab.productservice.service.OrderProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,5 +34,19 @@ public class OrderProducerController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void publishSampleOrdersWithUniqueKeys() {
         orderProducer.publishSampleOrdersWithUniqueKeys();
+    }
+
+    @PostMapping("/publish-default-error-handler-failure")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void publishDefaultErrorHandlerFailure() {
+        orderProducer.publishDefaultErrorHandlerOrder(
+                new Order("ORD-ERR-1001", "Error Handler Demo", "USA", 100.00, "FAIL"));
+    }
+
+    @PostMapping("/publish-retryable-failure")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void publishRetryableFailure() {
+        orderProducer.publishRetryableOrder(
+                new Order("ORD-RETRY-1001", "Retryable Demo", "USA", 100.00, "FAIL"));
     }
 }

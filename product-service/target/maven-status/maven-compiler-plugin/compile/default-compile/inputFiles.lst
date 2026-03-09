@@ -1,7 +1,10 @@
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\client\StockClient.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\KafkaTopicConfig.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderErrorHandlerConfig.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderProducerRunner.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderConsumers.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderErrorHandlerConsumers.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderRetryableConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\OrderProducerController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductCommandController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductProjectionSyncController.java

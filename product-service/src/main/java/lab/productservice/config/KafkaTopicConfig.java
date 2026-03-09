@@ -16,4 +16,31 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic ordersErrorHandlerTopic(
+            @Value("${app.kafka.orders-error-handler-topic}") String topicName) {
+        return TopicBuilder.name(topicName)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic ordersErrorHandlerDltTopic(
+            @Value("${app.kafka.orders-error-handler-dlt-topic}") String topicName) {
+        return TopicBuilder.name(topicName)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic ordersRetryableTopic(
+            @Value("${app.kafka.orders-retryable-topic}") String topicName) {
+        return TopicBuilder.name(topicName)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 }
