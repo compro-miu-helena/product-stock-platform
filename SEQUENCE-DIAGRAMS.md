@@ -31,14 +31,6 @@ sequenceDiagram
     participant Customers
     participant Orders
 
-    Note over Git,Orders: Recommended startup order
-    Note over Git,Orders: 1. Git-backed config
-    Note over Git,Orders: 2. Config Server
-    Note over Git,Orders: 3. Registry nodes
-    Note over Git,Orders: 4. Zipkin / Logstash / ElasticSearch / Kibana
-    Note over Git,Orders: 5. Authorization Server
-    Note over Git,Orders: 6. Business services
-    Note over Git,Orders: 7. API Gateway
 
     Config->>Git: Load external configuration repository
     Git-->>Config: Return config files
