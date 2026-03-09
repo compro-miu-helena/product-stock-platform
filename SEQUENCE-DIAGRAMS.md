@@ -1,7 +1,4 @@
 # Sequence Diagrams
-
-These diagrams use Mermaid and are based on the architecture shown in your image.
-
 Assumptions used in the diagrams:
 
 - `Config Server` reads external configuration from `Git`
@@ -177,8 +174,3 @@ sequenceDiagram
     Orders->>Zipkin: Finish trace span
     Products->>Zipkin: Finish trace span
 ```
-
-## Notes
-
-- Yes, Mermaid is a good fit for this. GitHub and many IDE Markdown previewers render it directly.
-- If you want, I can also add a third diagram for shutdown flow or service registration/discovery only.
