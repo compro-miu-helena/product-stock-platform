@@ -1,1 +1,3 @@
-C:\Users\mbeua\Área de Trabalho\CS590\product-stock-microservices-platform\product-service\src\test\java\lab\productservice\service\ProductCatalogServiceCircuitBreakerTest.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\test\java\lab\productservice\kafka\OrderKafkaEmbeddedIntegrationTest.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\test\java\lab\productservice\kafka\OrderKafkaTestcontainersIntegrationTest.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\test\java\lab\productservice\service\ProductCommandAndQueryServiceTest.java

@@ -2,6 +2,7 @@ C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\KafkaTopicConfig.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderBatchingConfig.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderErrorHandlerConfig.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderKafkaCoreConfig.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderProducerRunner.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderBatchConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderConsumers.java

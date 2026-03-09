@@ -1,0 +1,31 @@
+-------------------------------------------------------------------------------
+Test set: lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 5.696 s <<< FAILURE! -- in lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest
+lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest -- Time elapsed: 5.696 s <<< ERROR!
+java.lang.ExceptionInInitializerError
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1155)
+	at java.base/java.lang.reflect.Field.acquireFieldAccessor(Field.java:1132)
+	at java.base/java.lang.reflect.Field.getFieldAccessor(Field.java:1113)
+	at java.base/java.lang.reflect.Field.get(Field.java:425)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.getContainerInstance(TestcontainersExtension.java:248)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$findSharedContainers$10(TestcontainersExtension.java:209)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.findSharedContainers(TestcontainersExtension.java:210)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.beforeAll(TestcontainersExtension.java:55)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.IllegalStateException: Failed to verify that image 'apache/kafka-native:3.8.0' is a compatible substitute for 'confluentinc/cp-kafka'. This generally means that you are trying to use an image that Testcontainers has not been designed to use. If this is deliberate, and if you are confident that the image is compatible, you should declare compatibility in code using the `asCompatibleSubstituteFor` method. For example:
+   DockerImageName myImage = DockerImageName.parse("apache/kafka-native:3.8.0").asCompatibleSubstituteFor("confluentinc/cp-kafka");
+and then use `myImage` instead.
+	at org.testcontainers.utility.DockerImageName.assertCompatibleWith(DockerImageName.java:279)
+	at org.testcontainers.containers.KafkaContainer.<init>(KafkaContainer.java:77)
+	at lab.productservice.kafka.OrderKafkaTestcontainersIntegrationTest.<clinit>(OrderKafkaTestcontainersIntegrationTest.java:72)
+	... 17 more
+

@@ -11,12 +11,12 @@ import java.util.List;
 @Service
 public class OrderProducer {
 
-    private final KafkaTemplate<String, Order> kafkaTemplate;
+    private final KafkaTemplate<Object, Object> kafkaTemplate;
     private final String topicName;
     private final String errorHandlerTopicName;
     private final String retryableTopicName;
 
-    public OrderProducer(@Qualifier("kafkaTemplate") KafkaTemplate<String, Order> kafkaTemplate,
+    public OrderProducer(@Qualifier("kafkaTemplate") KafkaTemplate<Object, Object> kafkaTemplate,
                          @Value("${app.kafka.orders-topic}") String topicName,
                          @Value("${app.kafka.orders-error-handler-topic}") String errorHandlerTopicName,
                          @Value("${app.kafka.orders-retryable-topic}") String retryableTopicName) {

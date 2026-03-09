@@ -36,10 +36,10 @@ public class OrderErrorHandlerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Order> orderErrorHandlerKafkaListenerContainerFactory(
-            @Qualifier("kafkaConsumerFactory") ConsumerFactory<String, Order> consumerFactory,
+    public ConcurrentKafkaListenerContainerFactory<Object, Object> orderErrorHandlerKafkaListenerContainerFactory(
+            @Qualifier("kafkaConsumerFactory") ConsumerFactory<Object, Object> consumerFactory,
             DefaultErrorHandler orderDefaultErrorHandler) {
-        ConcurrentKafkaListenerContainerFactory<String, Order> factory =
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setCommonErrorHandler(orderDefaultErrorHandler);

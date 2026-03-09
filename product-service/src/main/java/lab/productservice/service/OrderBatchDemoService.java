@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class OrderBatchDemoService {
 
-    private final KafkaTemplate<String, Order> defaultKafkaTemplate;
+    private final KafkaTemplate<Object, Object> defaultKafkaTemplate;
     private final KafkaTemplate<String, Order> orderProducerBatchKafkaTemplate;
     private final String producerBatchTopicName;
     private final String consumerBatchTopicName;
@@ -23,7 +23,7 @@ public class OrderBatchDemoService {
     private final AtomicLong producerBatchEnabled = new AtomicLong(0);
     private final AtomicLong consumerBatchEnabled = new AtomicLong(0);
 
-    public OrderBatchDemoService(@Qualifier("kafkaTemplate") KafkaTemplate<String, Order> defaultKafkaTemplate,
+    public OrderBatchDemoService(@Qualifier("kafkaTemplate") KafkaTemplate<Object, Object> defaultKafkaTemplate,
                                  @Qualifier("orderProducerBatchKafkaTemplate")
                                  KafkaTemplate<String, Order> orderProducerBatchKafkaTemplate,
                                  @Value("${app.kafka.orders-producer-batch-topic}") String producerBatchTopicName,
