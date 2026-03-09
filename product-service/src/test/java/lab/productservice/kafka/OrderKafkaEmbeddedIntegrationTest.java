@@ -106,7 +106,9 @@ class OrderKafkaEmbeddedIntegrationTest {
 
             orderProducer.publishSampleOrdersWithUniqueKeys();
 
-            List<ConsumerRecord<String, Order>> records = pollUntilCount(consumer, 5);
+            List<ConsumerRecord<String, Order>> records = pollUntilCount(consumer, 5).stream()
+                    .filter(record -> record.value().orderNumber().startsWith("ORD-"))
+                    .toList();
 
             assertThat(records).hasSize(5);
             assertThat(records)
