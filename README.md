@@ -107,4 +107,25 @@ To trigger the `@RetryableTopic` flow:
 curl -X POST http://localhost:8901/orders/publish-retryable-failure
 ```
 
+## Kafka batching examples
+
+`product-service` also includes two 6-second batching demos:
+
+- producer-side batching: one new order every 2 seconds, producer batches for 6 seconds
+- consumer-side batching: one new order every 2 seconds, producer sends immediately, consumer receives in 6-second batches
+
+Producer-side batching demo:
+
+```bash
+curl -X POST http://localhost:8901/orders/batch-demo/producer-side/start
+curl -X POST http://localhost:8901/orders/batch-demo/producer-side/stop
+```
+
+Consumer-side batching demo:
+
+```bash
+curl -X POST http://localhost:8901/orders/batch-demo/consumer-side/start
+curl -X POST http://localhost:8901/orders/batch-demo/consumer-side/stop
+```
+
 If you start `product-service` without `config-server`, use port `8080` instead.

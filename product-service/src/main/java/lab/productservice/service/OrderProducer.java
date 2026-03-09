@@ -1,6 +1,7 @@
 package lab.productservice.service;
 
 import lab.productservice.model.Order;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class OrderProducer {
     private final String errorHandlerTopicName;
     private final String retryableTopicName;
 
-    public OrderProducer(KafkaTemplate<String, Order> kafkaTemplate,
+    public OrderProducer(@Qualifier("kafkaTemplate") KafkaTemplate<String, Order> kafkaTemplate,
                          @Value("${app.kafka.orders-topic}") String topicName,
                          @Value("${app.kafka.orders-error-handler-topic}") String errorHandlerTopicName,
                          @Value("${app.kafka.orders-retryable-topic}") String retryableTopicName) {

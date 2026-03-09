@@ -1,10 +1,13 @@
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\client\StockClient.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\KafkaTopicConfig.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderBatchingConfig.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderErrorHandlerConfig.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\config\OrderProducerRunner.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderBatchConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderErrorHandlerConsumers.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\consumer\OrderRetryableConsumers.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\OrderBatchDemoController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\OrderProducerController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductCommandController.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\controller\ProductProjectionSyncController.java
@@ -20,6 +23,7 @@ C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\ProductServiceApplication.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\repository\ProductCommandRepository.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\repository\ProductQueryRepository.java
+C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\OrderBatchDemoService.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\OrderProducer.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\ProductCommandService.java
 C:\Users\mbeua\Área de Trabalho\product-stock-platform\product-service\src\main\java\lab\productservice\service\ProductQueryService.java

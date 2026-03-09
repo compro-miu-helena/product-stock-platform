@@ -43,4 +43,22 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic ordersProducerBatchTopic(
+            @Value("${app.kafka.orders-producer-batch-topic}") String topicName) {
+        return TopicBuilder.name(topicName)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic ordersConsumerBatchTopic(
+            @Value("${app.kafka.orders-consumer-batch-topic}") String topicName) {
+        return TopicBuilder.name(topicName)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 }

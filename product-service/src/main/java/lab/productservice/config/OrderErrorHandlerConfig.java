@@ -6,6 +6,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -36,7 +37,7 @@ public class OrderErrorHandlerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Order> orderErrorHandlerKafkaListenerContainerFactory(
-            ConsumerFactory<String, Order> consumerFactory,
+            @Qualifier("kafkaConsumerFactory") ConsumerFactory<String, Order> consumerFactory,
             DefaultErrorHandler orderDefaultErrorHandler) {
         ConcurrentKafkaListenerContainerFactory<String, Order> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
